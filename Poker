@@ -1,0 +1,253 @@
+package demo_playing_cards;
+ 
+import java.util.HashSet;
+import java.util.Set;
+ 
+/**
+ * 1.创建学生对象，进行抓牌比点数
+ * 2.没人抓取2张牌，按照2~A比大小，若点数相同则按照黑红梅方顺序比较
+ */
+public class TestUserName{
+            private Integer Id;
+            @Override
+            public int hashCode() {
+                final int prime = 31;
+                int result = 1;
+                result = prime * result + ((Name == null) ? 0 : Name.hashCode());
+                return result;
+            }
+            @Override
+            public boolean equals(Object obj) {
+                if (this == obj)
+                    return true;
+                if (obj == null)
+                    return false;
+                if (!(obj instanceof TestUserName))
+                    return false;
+                TestUserName other = (TestUserName) obj;
+                if (Name == null) {
+                    if (other.Name != null)
+                        return false;
+                } else if (!Name.equals(other.Name))
+                    return false;
+                return true;
+            }
+            private String Name;
+            Set<Cards> set;
+            public Integer getId() {
+                return Id;
+            }
+            public void setId(Integer id) {
+                Id = id;
+            }
+            public String getName() {
+                return Name;
+            }
+            public void setName(String name) {
+                Name = name;
+            }
+     public TestUserName(Integer Id,String Name){
+         this.Id = Id;
+         this.Name = Name;
+         this.set = new HashSet<Cards>();
+     }
+     
+    }
+ 
+ 
+package demo_playing_cards;
+/*
+ * 1.主要功能是创建牌属性
+ * 2.将创建好的对象赋值给List集合中，先使其有序，后打乱顺序
+ */
+public class Cards implements Comparable<Cards>{
+       private String design; // 创建花色属性
+       private String number; //创建点色属性
+        
+    public String getDesign() {
+        return design;
+    }
+    public void setDesign(String design) {
+        this.design = design;
+    }
+    public String getNumber() {
+        return number;
+    }
+    public void setNumber(String number) {
+        this.number = number;
+    }
+     
+    public Cards(String design,String number){
+        this.design = design;
+        this.number = number;
+    }
+    @Override
+    public int compareTo(Cards o) {
+        // TODO 自动生成的方法存根
+        return this.number.compareTo(o.number);
+    }
+}
+ 
+ 
+ 
+package demo_playing_cards;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.Set;
+/*
+ * 1.将创建好的牌存入List有序集合中
+ */
+public class Testlist {
+      public List<Cards> list;  //存放创建好的牌对象
+      public List<String> list1;//存放牌模型的集合框架
+      public Map<Integer,TestUserName> user;//创建学生对象并且随机选牌
+      List<Integer> userStore;  
+      TestUserName username;
+      Scanner input;
+//      TestUserName username;
+       
+      public Testlist(){
+      list = new ArrayList<Cards>();
+      list1 = new ArrayList();
+      user = new HashMap<Integer,TestUserName>();
+      userStore = new ArrayList<Integer>();
+      input = new Scanner(System.in);
+      }
+       
+      /**
+       * 创建一个从2~A的集合
+       */
+      public void TestAdd(){
+      for(int i = 2; i <= 10; i++){
+      list1.add(String.valueOf(i));
+      }
+      list1.addAll(Arrays.asList("J","Q","K","A"));
+//      System.out.println("测试添加牌模型：");
+//      for (String cards : list1) {
+//System.out.print(cards+",");
+//}
+      }
+      /**
+       * 创建牌
+       */
+      public void TestAdd2(){
+      System.out.println("----------创建扑克牌！-----------");
+    for (String cards : list1) {
+list.add(new Cards("方块",cards));
+list.add(new Cards("梅花",cards));
+list.add(new Cards("红桃",cards));
+list.add(new Cards("黑桃",cards));
+}
+    
+    //测试是否创建成功
+    System.out.println("----------扑克牌创建成功！-----------");
+    System.out.print("为:");
+    for (Cards cards : list) {
+System.out.print(cards.getDesign()+cards.getNumber()+",");
+}
+    System.out.println();
+      }
+       
+       
+      /**
+       * 存储用户ID的方法
+       */
+      public void TestUserStort(Integer ID){
+      userStore.add(ID);
+      }
+       
+      /**
+       * 创建用户对象并且随机抽取里面的两张牌
+       * @param args
+       */
+      public void TestUserName(){
+//      boolean searchFlag=false;
+      Integer ID = null;
+      for(int i = 1;i <= 2; i++){ 
+      while(true){
+//          try {
+System.out.println("请输入第"+i+"个用户ID");
+  ID = input.nextInt();
+//判断ID在user集合中是否存在
+ TestUserName us = user.get(ID);
+ if(us != null){
+ System.out.println("已存在该学生！！");
+ continue;
+ }            
+//} catch (RuntimeException e) {
+//System.out.println("请输入整形!");
+//     }   
+ TestUserStort(ID);  
+          break;
+      }
+      //输入用户名
+      System.out.println("请输入第"+i+"用户名");
+       
+      String name = input.next();
+      //将ID和name给创建对象
+       username = new TestUserName(ID, name);
+       user.put(ID,username);
+        
+}
+       
+       
+      Set<Entry<Integer,TestUserName>> entryset = user.entrySet();      
+      for (Entry<Integer, TestUserName> entry : entryset) {
+System.out.println("----欢迎玩家:" + entry.getValue().getName());
+      }
+      }  
+       
+      /**
+       * 进行发牌
+       */
+      public void TestLicensing(){
+      Random random = new Random();
+      System.out.println("---------开始发牌...---------");
+    
+      TestUserName name1 = user.get(userStore.get(0));
+      TestUserName name2 = user.get(userStore.get(1));
+      Cards ca = null;
+      int []size = new int[2];
+      for(int i = 0;i < 2; i++){
+      do{
+      ca = list.get(random.nextInt(list.size()-1));
+      }while(name1.set.contains(ca));
+      name1.set.add(ca);
+      System.out.println( name1.getName() + "用户所抽到的牌:" + ca.getDesign()+ca.getNumber());
+     size[i] = list.indexOf(ca);
+      }
+      Cards ca1;
+      int[] size2 = new int[2];
+      for(int i = 0;i < 2; i++){
+      do{
+      ca1 = list.get(random.nextInt(list.size()-1));
+      }while(name1.set.contains(ca1) || name2.set.contains(ca));
+      name2.set.add(ca1);
+      System.out.println( name2.getName() + "用户所抽到的牌:" + ca1.getDesign()+ca1.getNumber());
+      size2[i] = list.indexOf(ca1);
+      }
+      //对数组进行排序
+      Arrays.sort(size);
+      Arrays.sort(size2);
+      //进行比较，谁大谁赢
+      if(size[1]>size2[1]){
+      System.out.println(name1.getName()+"获胜");
+      }else
+      System.out.println(name2.getName()+"获胜");
+      }
+       
+      public static void main(String[] args){
+      Testlist st = new Testlist();
+      st.TestAdd();
+      st.TestAdd2();
+      st.TestUserName();
+      st.TestLicensing();
+      }
+}
